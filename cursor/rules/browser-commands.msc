@@ -1,0 +1,67 @@
+Browser Commands
+
+<navigate_browser url="https://www.example.com" tab_idx="0"/>
+Description: Opens a URL in a chrome browser controlled through playwright.
+Parameters:
+- url (required): url to navigate to
+- tab_idx: browser tab to open the page in. Use an unused index to create a new tab
+
+<view_browser reload_window="True/False" scroll_direction="up/down" tab_idx="0"/>
+Description: Returns the current screenshot and HTML for a browser tab.
+Parameters:
+- reload_window: whether to reload the page before returning the screenshot. Note that when you're using this command to view page contents after waiting for it to load, you likely don't want to reload the window since then the page would be in a loading state again.
+- scroll_direction: Optionally specify a direction to scroll before returning the page content
+- tab_idx: browser tab to interact with
+
+<click_browser devinid="12" coordinates="420,1200" tab_idx="0"/>
+Description: Click on the specified element. Use this to interact with clickable UI elements.
+Parameters:
+- devinid: you can specify the element to click on using its `devinid` but not all elements have one
+- coordinates: Alternatively specify the click location using x,y coordinates. Only use this if you absolutely must (if the devinid does not exist)
+- tab_idx: browser tab to interact with
+
+<type_browser devinid="12" coordinates="420,1200" press_enter="True/False" tab_idx="0">Text to type into the textbox. Can be multiline.</type_browser>
+Description: Types text into the specified text box on a site.
+Parameters:
+- devinid: you can specify the element to type in using its `devinid` but not all elements have one
+- coordinates: Alternatively specify the location of the input box using x,y coordinates. Only use this if you absolutely must (if the devinid does not exist)
+- press_enter: whether to press enter in the input box after typing
+- tab_idx: browser tab to interact with
+
+<restart_browser extensions="/path/to/extension1,/path/to/extension2" url="https://www.google.com"/>
+Description: Restarts the browser at a specified URL. This will close all other tabs, so use this with care. Optionally specify paths of extensions that you want to enable in your browser.
+Parameters:
+- extensions: comma separated paths to local folders containing the code of extensions you want to load
+- url (required): url to navigate to after the browser restarts
+
+<move_mouse coordinates="420,1200" tab_idx="0"/>
+Description: Moves the mouse to the specified coordinates in the browser.
+Parameters:
+- coordinates (required): Pixel x,y coordinates to move the mouse to
+- tab_idx: browser tab to interact with
+
+<press_key_browser tab_idx="0">keys to press. Use `+` to press multiple keys simultaneously for shortcuts</press_key_browser>
+Description: Presses keyboard shortcuts while focused on a browser tab.
+Parameters:
+- tab_idx: browser tab to interact with
+
+<browser_console tab_idx="0">console.log('Hi') // Optionally run JS code in the console.</browser_console>
+Description: View the browser console outputs and optionally run commands. Useful for inspecting errors and debugging when combine with console.log statements in your code. If no code to run is provided, this will just return the recent console output.
+Parameters:
+- tab_idx: browser tab to interact with
+
+<select_option_browser devinid="12" index="2" tab_idx="0"/>
+Description: Selects a zero-indexed option from a dropdown menu.
+Parameters:
+- devinid: specify the dropdown element using its `devinid`
+- index (required): index of the option in the dropdown you want to select
+- tab_idx: browser tab to interact with
+
+
+When using browser commands:
+- The chrome playwright browser you use automatically inserts `devinid` attributes into HTML tags that you can interact with. These are a convenience feature since selecting elements using their `devinid` is more reliable than using pixel coordinates. You can still use coordinates as a fallback.
+- The tab_idx defaults to "0" if you don't specify it
+- After each turn, you will receive a screenshot and HTML of the page for your most recent browser command.
+- During each turn, only interact with at most one browser tab.
+- You can output multiple actions to interact with the same browser tab if you don't need to see the intermediary page state. This is particularly useful for efficiently filling out forms.
+- Some browser pages take a while to load, so the page state you see might still contain loading elements. In that case, you can wait and view the page again a few seconds later to actually view the page.

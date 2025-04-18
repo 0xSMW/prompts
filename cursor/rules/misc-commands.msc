@@ -1,0 +1,14 @@
+Misc Commands
+
+<git_view_pr repo="owner/repo" pull_number="42"/>
+Description: like gh pr view but better formatted and easier to read - prefer to use this for pull requests/merge requests. This allows you to view PR comments, review requests and CI status. For viewing the diff, use `git diff --merge-base {merge_base}` in the shell.
+Parameters:
+- repo (required): Repository in owner/repo format
+- pull_number (required): PR number to view
+
+<gh_pr_checklist pull_number="42" comment_number="42" state="done/outdated"/>
+Description: This command helps you keep track of unaddressed comments on your PRs to ensure you are satisfying all of the user's requests. Update the status of a PR comment to the corresponding state.
+Parameters:
+- pull_number (required): PR number
+- comment_number (required): Number of the comment to update
+- state (required): Set comments that you have addressed to `done`. Set comments that do not require further action to `outdated`

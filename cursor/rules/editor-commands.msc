@@ -1,0 +1,82 @@
+Editor Commands
+
+<open_file path="/full/path/to/filename.py" start_line="123" end_line="456" sudo="True/False"/>
+Description: Open a file and view its contents. If available, this will also display the file outline obtained from the LSP, any LSP diagnostics, as well as the diff between when you first opened this page and its current state. Long file contents will be truncated to a range of about 500 lines. You can also use this command open and view .png, .jpg, or .gif images. Small files will be shown in full, even if you don't select the full line range. If you provide a start_line but the rest of the file is short, you will be shown the full rest of the file regardless of your end_line.
+Parameters:
+- path (required): Absolute path to the file.
+- start_line: If you don't want to view the file starting from the top of the file, specify a start line.
+- end_line: If you want to view only up to a specific line in the file, specify an end line.
+- sudo: Whether to open the file in sudo mode.
+
+<str_replace path="/full/path/to/filename" sudo="True/False" many="False">
+Provide the strings to find and replace within <old_str> and <new_str> tags inside the <str_replace ..> tags.
+* The `old_str` parameter should match EXACTLY one or more consecutive lines from the original file. Be mindful of whitespaces! If your <old_str> content contains a line that has only spaces or tabs, you need to also output these - the string must match EXACTLY. You cannot include partial lines.
+* The `new_str` parameter should contain the edited lines that should replace the `old_str`
+* After the edit, you will be shown the part of the file that was changed, so there's no need to call <open_file> for the same part of the same file at the same time as <str_replace>.
+</str_replace>
+Description: Edits a file by replacing the old string with a new string. The command returns a view of the updated file contents. If available, it will also return the updated outline and diagnostics from the LSP.
+Parameters:
+- path (required): Absolute path to the file
+- sudo: Whether to open the file in sudo mode.
+- many: Whether to replace all occurences of the old string. If this is False, the old string must occur exactly once in the file.
+
+Example:
+<str_replace path="/home/ubuntu/test.py">
+<old_str>    if val == True:</old_str>
+<new_str>    if val == False:</new_str>
+</str_replace>
+
+<create_file path="/full/path/to/filename" sudo="True/False">Content of the new file. Don't start with backticks.</create_file>
+Description: Use this to create a new file. The content inside the create file tags will be written to the new file exactly as you output it.
+Parameters:
+- path (required): Absolute path to the file. File must not exist yet.
+- sudo: Whether to create the file in sudo mode.
+
+<undo_edit path="/full/path/to/filename" sudo="True/False"/>
+Description: Reverts the last change that you made to the file at the specified path. Will return a diff that shows the change.
+Parameters:
+- path (required): Absolute path to the file
+- sudo: Whether to edit the file in sudo mode.
+
+<insert path="/full/path/to/filename" sudo="True/False" insert_line="123">
+Provide the strings to insert within the <insert ...> tags.
+* The string you provide here should start immediately after the closing angle bracket of the <insert ...> tag. If there is a newline after the closing angle bracket, it will be interpreted as part of the string you are inserting.
+* After the edit, you will be shown the part of the file that was changed, so there's no need to call <open_file> for the same part of the same file at the same time as <insert>.
+</insert>
+Description: Inserts a new string in a file at a provided line number. For normal edits, this command is often preferred since it is more efficient than using <str_replace ...> at a provided line number you want to keep. The command returns a view of the updated file contents. If available, it will also return the updated outline and diagnostics from the LSP.
+Parameters:
+- path (required): Absolute path to the file
+- sudo: Whether to open the file in sudo mode.
+- insert_line (required): The line number to insert the new string at. Should be in [1, num_lines_in_file + 1]. The content that is currently at the provided line number will be moved down by one line.
+
+Example:
+<insert path="/home/ubuntu/test.py" insert_line="123">    logging.debug(f"checking {val=}")</insert>
+
+<remove_str path="/full/path/to/filename" sudo="True/False" many="False">
+Provide the strings to remove here.
+* The string you provide here should match EXACTLY one or more consecutive full lines from the original file. Be mindful of whitespaces! If your string contains a line that has only spaces or tabs, you need to also output these - the string must match EXACTLY. You cannot include partial lines. You cannot remove part of a line.
+* Start your string immediately after closing the <remove_str ...> tag. If you include a newline after the closing angle bracket, it will be interpreted as part of the string you are removing.
+</remove_str>
+Description: Deletes the provided string from the file. Use this when you want to remove some content from a file. The command returns a view of the updated file contents. If available, it will also return the updated outline and diagnostics from the LSP.
+Parameters:
+- path (required): Absolute path to the file
+- sudo: Whether to open the file in sudo mode.
+- many: Whether to remove all occurences of the string. If this is False, the string must occur exactly once in the file. Set this to true if you want to remove all instances, which is more efficient than calling this command multiple times.
+
+<find_and_edit dir="/some/path/" regex="regexPattern" exclude_file_glob="**/some_dir_to_exclude/**" file_extension_glob="*.py">A sentence or two describing the change you want to make at each location that matches the regex. You can also describe conditions for locations where no change should occur.</find_and_edit>
+Description: Searches the files in the specified directory for matches for the provided regular expression. Each match location will be sent to a separate LLM which may make an edit according to the instructions you provide here. Use this command if you want to make a similar change across files and can use a regex to identify all relevant locations. The separate LLM can also choose not to edit a particular location, so it's no big deal to have false positive matches for your regex. This command is especially useful for fast and efficient refactoring. Use this command instead of your other edit commands to make the same change across files.
+Parameters:
+- dir (required): absolute path to directory to search in
+- regex (required): regex pattern to find edit locations
+- exclude_file_glob: Specify a glob pattern to exclude certain paths or files within the search directory.
+- file_extension_glob: Limit matches to files with the provided extension
+
+
+When using editor commands:
+- Never leave any comments that simply restate what the code does. Default to not adding comments at all. Only add comments if they're absolutely necessary or requested by the user.
+- Only use the editor commands to create, view, or edit files. Never use cat, sed, echo, vim etc. to view, edit, or create files. Interacting with files through your editor rather than shell commands is crucial since your editor has many useful features like LSP diagnostics, outlines, overflow protection, and much more.
+- To achieve your task as fast as possible, you must try to make as many edits as possible at the same time by outputting multiple editor commands.
+- If you want to make the same change across multiple files in the codebase, for example for refactoring tasks, you should use the find_and_edit command to more efficiently edit all the necessary files.
+
+DO NOT use commands like vim, cat, echo, sed etc. in your shell
+- These are less efficient than using the editor commands provided above

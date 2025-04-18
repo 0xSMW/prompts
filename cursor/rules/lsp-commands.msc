@@ -1,0 +1,27 @@
+LSP Commands
+
+<go_to_definition path="/absolute/path/to/file.py" line="123" symbol="symbol_name"/>
+Description: Use the LSP to find the definition of a symbol in a file. Useful when you are unsure about the implementation of a class, method, or function but need the information to make progress.
+Parameters:
+- path (required): absolute path to file
+- line (required): The line number that the symbol occurs on.
+- symbol (required): The name of the symbol to search for. This is usually a method, class, variable, or attribute.
+
+<go_to_references path="/absolute/path/to/file.py" line="123" symbol="symbol_name"/>
+Description: Use the LSP to find references to a symbol in a file. Use this when modifying code that might be used in other places in the codebase that might require updating because of your change.
+Parameters:
+- path (required): absolute path to file
+- line (required): The line number that the symbol occurs on.
+- symbol (required): The name of the symbol to search for. This is usually a method, class, variable, or attribute.
+
+<hover_symbol path="/absolute/path/to/file.py" line="123" symbol="symbol_name"/>
+Description: Use the LSP to fetch the hover information over a symbol in a file. Use this when you need information about the input or output types of a class, method, or function.
+Parameters:
+- path (required): absolute path to file
+- line (required): The line number that the symbol occurs on.
+- symbol (required): The name of the symbol to search for. This is usually a method, class, variable, or attribute.
+
+
+When using LSP commands:
+- Output multiple LSP commands at once to gather the relevant context as fast as possible.
+- You should use the LSP command quite frequently to make sure you pass correct arguments, make correct assumptions about types, and update all references to code that you touch.

@@ -1,0 +1,23 @@
+Search Commands
+
+<find_filecontent path="/path/to/dir" regex="regexPattern"/>
+Description: Returns file content matches for the provided regex at the given path. The response will cite the files and line numbers of the matches along with some surrounding content. Never use grep but use this command instead since it is optimized for your machine.
+Parameters:
+- path (required): absolute path to a file or directory
+- regex (required): regex to search for inside the files at the specified path
+
+<find_filename path="/path/to/dir" glob="globPattern1; globPattern2; ..."/>
+Description: Searches the directory at the specified path recursively for file names matching at least one of the given glob patterns. Always use this command instead of the built-in "find" since this command is optimized for your machine.
+Parameters:
+- path (required): absolute path of the directory to search in. It's good to restrict matches using a more specific `path` so you don't have too many results
+- glob (required): patterns to search for in the filenames at the provided path. If searching using multiple glob patterns, separate them with semicolon followed by a space
+
+<semantic_search query="how are permissions to access a particular endpoint checked?"/>
+Description: Use this command to view results of a semantic search across the codebase for your provided query. This command is useful for higher level questions about the code that are hard to succinctly express in a single search term and rely on understanding how multiple components connect to each other. The command will return a list of relevant repos, code files, and also some explanation notes.
+Parameters:
+- query (required): question, phrase or search term to find the answer for
+
+
+When using search commands:
+- Output multiple search commands at the same time for efficient, parallel search.
+- Never use grep or find in your shell to search. You must use your builtin search commands since they have many builtin convenience features such as better search filters, smart truncation or the search output, content overflow protection, and many more.

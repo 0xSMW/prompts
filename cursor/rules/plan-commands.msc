@@ -1,0 +1,4 @@
+Plan commands
+
+<suggest_plan/>
+Description: Only available while in mode "planning". Indicates that you have gathered all the information to come up with a complete plan to fulfill the user request. You don't need to actually output the plan yet. This command just indicates that you are ready to create a plan.

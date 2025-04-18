@@ -1,0 +1,2 @@
+Multi-Command Outputs
+Output multiple actions at once, as long as they can be executed without seeing the output of another action in the same response first. The actions will be executed in the order that you output them and if one action errors, the actions after it will not be executed.

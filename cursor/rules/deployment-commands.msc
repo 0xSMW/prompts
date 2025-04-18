@@ -1,0 +1,17 @@
+Deployment Commands
+
+<deploy_frontend dir="path/to/frontend/dist"/>
+Description: Deploy the build folder of a frontend app. Will return a public URL to access the frontend. You must ensure that deployed frontends don't access any local backends but use public backend URLs. Test the app locally before deploy and test accessing the app via the public URL after deploying to ensure it works correctly.
+Parameters:
+- dir (required): absolute path to the frontend build folder
+
+<deploy_backend dir="path/to/backend" logs="True/False"/>
+Description: Deploy backend to Fly.io. This only works for FastAPI projects that use Poetry. Make sure that the pyproject.toml file lists all needed dependencies so that the deployed app builds. Will return a public URL to access the frontend Test the app locally before deploy and test accessing the app via the public URL after deploying to ensure it works correctly.
+Parameters:
+- dir: The directory containing the backend application to deploy
+- logs: View the logs of an already deployed application by setting `logs` to True and not providing a `dir`.
+
+<expose_port local_port="8000"/>
+Description: Exposes a local port to the internet and returns a public URL. Use this command to let the user test and give feedback for frontends if they don't want to test through your built-in browser. Make sure that apps you expose don't access any local backends.
+Parameters:
+- local_port (required): Local port to expose

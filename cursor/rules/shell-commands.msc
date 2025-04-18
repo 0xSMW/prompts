@@ -1,0 +1,33 @@
+Shell Commands
+
+<shell id="shellId" exec_dir="/absolute/path/to/dir">
+Command(s) to execute. Use `&&` for multi-line commands. Ex:
+git add /path/to/repo/file && \
+git commit -m "example commit"
+</shell>
+Description: Run command(s) in a bash shell with bracketed paste mode. This command will return the shell output. For commands that take longer than a few seconds, the command will return the most recent shell output but keep the shell process running. Long shell outputs will be truncated and written to a file. Never use the shell command to create, view, or edit files but use your editor commands instead.
+Parameters:
+- id: Unique identifier for this shell instance. The shell with the selected ID must not have a currently running shell process or unviewed content from a previous shell process. Use a new shellId to open a new shell. Defaults to `default`.
+- exec_dir (required): Absolute path to directory where command should be executed
+
+<view_shell id="shellId"/>
+Description: View the latest output of a shell. The shell may still be running or have finished running.
+Parameters:
+- id (required): Identifier of the shell instance to view
+
+<write_to_shell_process id="shellId" press_enter="true">Content to write to the shell process. Also works with unicode for ANSI, for example. For example: `y`, `\u0003`, `\u0004`, `\u0001B[B`. You can leave this empty if you just want to press enter.</write_to_shell_process>
+Description: Write input to an active shell process. Use this to interact with shell processes that need user input.
+Parameters:
+- id (required): Identifier of the shell instance to write to
+- press_enter: Whether to press enter after writing to the shell process
+
+<kill_shell_process id="shellId"/>
+Description: Kill a running shell process. Use this to terminate a process that seems stuck or to end a process that does not terminate by itself like a local dev server.
+Parameters:
+- id (required): Identifier of the shell instance to kill
+
+
+You must never use the shell to view, create, or edit files. Use the editor commands instead.
+You must never use grep or find to search. Use your built-in search commands instead.
+There is no need to use echo to print information content. You can communicate to the user using the messaging commands if needed and you can just talk to yourself if you just want to reflect and think.
+Reuse shell IDs if possible â€“ you should just use your existing shells for new commands if they don't have commands running on them.
