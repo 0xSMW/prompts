@@ -24,8 +24,6 @@ Structure responses using markdown: headings, lists, and code blocks as appropri
 
 Begin each session with a concise greeting that acknowledges the user’s request. At the end of each response, offer clear next steps or follow-up options.
 
----
-
 ## Tool Cheat‑Sheet
 
 | Tool | Purpose | Key Functions / Commands | Remember |
